@@ -8,7 +8,7 @@ const getProgressColor = (value: number) => {
 
 const ProgressBar = ({ value }: { value: number }) => {
   return (
-    <div className="flex flex-col items-center gap-1 w-[50%]">
+    <div className="flex flex-col items-center gap-1">
       <span className="text-xs">{value >= 100 ? ">100%" : `${value}%`}</span>
       <Progress value={value} indicatorClassName={getProgressColor(value)} />
     </div>

@@ -353,17 +353,17 @@ const ITSupervisorDashboardPage = async ({
 
   return (
     <div className="min-h-screen w-full bg-gray-50 grid grid-rows-[auto_1fr]">
-      <header className="border-b flex items-center justify-between py-1 px-4 sm:px-10">
+      <header className="w-full border-b flex items-center justify-between py-1 px-4 sm:px-10">
         <Link href="/" className="font-semibold text-xl">
           HMS
         </Link>
         <UserDropdown name={user.name} role={user.role} />
       </header>
-      <div className="grid grid-cols-[50px_1fr] sm:grid-cols-[150px_1fr] md:grid-cols-[250px_1fr]">
+      <div className="w-full grid grid-cols-[50px_1fr] sm:grid-cols-[150px_1fr] xl:grid-cols-[200px_1fr]">
         <LeftNavbar />
         {/* Main */}
-        <main className="p-6">
-          <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
+        <main className="w-full p-6">
+          <div className="w-full grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2">
             {/* Summary Statistics Section */}
             <SummaryCard count={1} text="Not Started" />
             <SummaryCard count={12} text="In-progress" />
@@ -372,7 +372,7 @@ const ITSupervisorDashboardPage = async ({
             <SummaryCard count={34} text="Escalation" />
             <div className="sm:hidden"></div>
             {/* Search Bar Section */}
-            <div className="my-4 col-span-2 sm:col-span-5 flex justify-center">
+            <div className="my-4 col-span-2 sm:col-span-3 lg:col-span-5 flex justify-center">
               <div className="w-full max-w-3xl">
                 <Field>
                   <FieldLabel
@@ -395,7 +395,7 @@ const ITSupervisorDashboardPage = async ({
               </div>
             </div>
             {/* Ticket Queue Table */}
-            <div className="hidden sm:block col-span-2 sm:col-span-5">
+            <div className="hidden lg:block lg:col-span-5">
               <Table>
                 <TableHeader>
                   <TableRow>
@@ -430,7 +430,7 @@ const ITSupervisorDashboardPage = async ({
               </Table>
             </div>
             {/* Mobile Cards */}
-            <div className="sm:hidden col-span-2 sm:col-span-5">
+            <div className="lg:hidden col-span-2 sm:col-span-3 md:grid md:grid-cols-2 md:gap-2 w-full">
               {filteredTickets.map((ticket, key) => (
                 <div
                   key={key}
@@ -449,7 +449,7 @@ const ITSupervisorDashboardPage = async ({
                 </div>
               ))}
             </div>
-            <div className="col-span-2 sm:col-span-5">
+            <div className="col-span-2 sm:col-span-3 lg:col-span-5">
               <Pagination>
                 <PaginationContent>
                   <PaginationItem>
