@@ -1,28 +1,17 @@
 import Link from "next/link";
-
-import { Home, FileText, Settings, LogOut, Sun, Moon } from "lucide-react";
-import {
-  Card,
-  CardAction,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Home, FileText, Settings, LogOut, Search } from "lucide-react";
+import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import UserDropdown from "./user-dropdown";
+import UserDropdown from "./UserDropdown";
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
-  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
 import { Field, FieldLabel } from "@/components/ui/field";
-import { Progress } from "@/components/ui/progress";
 import { ButtonGroup } from "@/components/ui/button-group";
 import { Input } from "@/components/ui/input";
 import {
@@ -34,14 +23,10 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import { StatusBadge } from "./status-badge";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import ProgressBar from "./progress-bar";
+import { StatusBadge } from "./StatusBadge";
+import ProgressBar from "./ProgressBar";
+import LeftNavbar from "./LeftNavbar";
+import SummaryCard from "./SummaryCard";
 
 const ITSupervisorDashboardPage = async ({
   searchParams,
@@ -56,6 +41,66 @@ const ITSupervisorDashboardPage = async ({
   };
 
   const tickets = [
+    {
+      id: "13383",
+      date: "Feb 16, 2026",
+      subject: "No email access for employee Jose Rizal",
+      progress: 0,
+      minutes: 120,
+      status: "Not Started",
+      company: "Unilogix Inc.",
+      assignedTo: "Kevin Filio",
+    },
+    {
+      id: "13383",
+      date: "Feb 16, 2026",
+      subject: "No email access for employee Jose Rizal",
+      progress: 0,
+      minutes: 120,
+      status: "Not Started",
+      company: "Unilogix Inc.",
+      assignedTo: "Kevin Filio",
+    },
+    {
+      id: "13383",
+      date: "Feb 16, 2026",
+      subject: "No email access for employee Jose Rizal",
+      progress: 0,
+      minutes: 120,
+      status: "Not Started",
+      company: "Unilogix Inc.",
+      assignedTo: "Kevin Filio",
+    },
+    {
+      id: "13383",
+      date: "Feb 16, 2026",
+      subject: "No email access for employee Jose Rizal",
+      progress: 0,
+      minutes: 120,
+      status: "Not Started",
+      company: "Unilogix Inc.",
+      assignedTo: "Kevin Filio",
+    },
+    {
+      id: "13383",
+      date: "Feb 16, 2026",
+      subject: "No email access for employee Jose Rizal",
+      progress: 0,
+      minutes: 120,
+      status: "Not Started",
+      company: "Unilogix Inc.",
+      assignedTo: "Kevin Filio",
+    },
+    {
+      id: "13383",
+      date: "Feb 16, 2026",
+      subject: "No email access for employee Jose Rizal",
+      progress: 0,
+      minutes: 120,
+      status: "Not Started",
+      company: "Unilogix Inc.",
+      assignedTo: "Kevin Filio",
+    },
     {
       id: "13383",
       date: "Feb 16, 2026",
@@ -307,104 +352,50 @@ const ITSupervisorDashboardPage = async ({
         );
 
   return (
-    <div className="h-dvh w-full bg-gray-50 grid grid-rows-[auto_1fr]">
-      <header className="border-b flex items-center justify-between py-1 px-2 sm:px-10">
+    <div className="min-h-screen w-full bg-gray-50 grid grid-rows-[auto_1fr]">
+      <header className="border-b flex items-center justify-between py-1 px-4 sm:px-10">
         <Link href="/" className="font-semibold text-xl">
           HMS
         </Link>
         <UserDropdown name={user.name} role={user.role} />
       </header>
-      <div className="grid grid-cols-[250px_1fr] min-h-0">
-        {/* Sidebar */}
-        <nav className="border-r p-4 flex flex-col gap-6">
-          <div className="flex items-center gap-3 cursor-pointer hover:text-gray-500">
-            <Home size={20} />
-            <span>Home</span>
-          </div>
-
-          <div className="flex items-center gap-3 cursor-pointer hover:text-gray-500">
-            <FileText size={20} />
-            <span>Ticket Report</span>
-          </div>
-
-          <div className="flex items-center gap-3 cursor-pointer hover:text-gray-500">
-            <Settings size={20} />
-            <span>Settings</span>
-          </div>
-
-          <div className="flex items-center gap-3 cursor-pointer hover:text-red-500">
-            <LogOut size={20} />
-            <span>Sign Out</span>
-          </div>
-        </nav>
+      <div className="grid grid-cols-[50px_1fr] sm:grid-cols-[150px_1fr] md:grid-cols-[250px_1fr]">
+        <LeftNavbar />
         {/* Main */}
-        <main className="overflow-y-auto min-h-0 p-6">
-          <div className="grid grid-cols-5 gap-2">
-            {/* Summary Statistics */}
-            <Link href="?status=not started">
-              <Card className="w-[80%] cursor-pointer transition-all duration-200 hover:-translate-y-1 hover:shadow-lg hover:border-primary/40">
-                <CardContent className="text-center text-4xl pb-0">
-                  12
-                </CardContent>
-                <CardTitle className="text-center text-lg pt-0">
-                  Not Started
-                </CardTitle>
-              </Card>
-            </Link>
-            <Link href="?status=in-progress">
-              <Card className="w-[80%] cursor-pointer transition-all duration-200 hover:-translate-y-1 hover:shadow-lg hover:border-primary/40">
-                <CardContent className="text-center text-4xl pb-0">
-                  8
-                </CardContent>
-                <CardTitle className="text-center text-lg pt-0">Open</CardTitle>
-              </Card>
-            </Link>
-            <Link href="?status=hold">
-              <Card className="w-[80%] cursor-pointer transition-all duration-200 hover:-translate-y-1 hover:shadow-lg hover:border-primary/40">
-                <CardContent className="text-center text-4xl pb-0">
-                  5
-                </CardContent>
-                <CardTitle className="text-center text-lg pt-0">Hold</CardTitle>
-              </Card>
-            </Link>
-            <Link href="?status=closed">
-              <Card className="w-[80%] cursor-pointer transition-all duration-200 hover:-translate-y-1 hover:shadow-lg hover:border-primary/40">
-                <CardContent className="text-center text-4xl pb-0">
-                  19
-                </CardContent>
-                <CardTitle className="text-center text-lg pt-0">
-                  Closed
-                </CardTitle>
-              </Card>
-            </Link>
-            <Link href="?status=escalation">
-              <Card className="w-[80%] cursor-pointer transition-all duration-200 hover:-translate-y-1 hover:shadow-lg hover:border-primary/40">
-                <CardContent className="text-center text-4xl pb-0">
-                  3
-                </CardContent>
-                <CardTitle className="text-center text-lg pt-0">
-                  Escalation
-                </CardTitle>
-              </Card>
-            </Link>
+        <main className="p-6">
+          <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
+            {/* Summary Statistics Section */}
+            <SummaryCard count={1} text="Not Started" />
+            <SummaryCard count={12} text="In-progress" />
+            <SummaryCard count={19} text="Hold" />
+            <SummaryCard count={2} text="Closed" />
+            <SummaryCard count={34} text="Escalation" />
+            <div className="sm:hidden"></div>
             {/* Search Bar Section */}
-            <div className="col-span-5 flex justify-center p-2">
-              <Field className="w-[80%]">
-                <FieldLabel htmlFor="input-button-group" className="text-lg">
-                  {activeStatus.charAt(0).toUpperCase() + activeStatus.slice(1)}{" "}
-                  Case Detail
-                </FieldLabel>
-                <ButtonGroup>
-                  <Input
-                    id="input-button-group"
-                    placeholder="Enter case number, subject, or company"
-                  />
-                  <Button>Search</Button>
-                </ButtonGroup>
-              </Field>
+            <div className="my-4 col-span-2 sm:col-span-5 flex justify-center">
+              <div className="w-full max-w-3xl">
+                <Field>
+                  <FieldLabel
+                    htmlFor="input-button-group"
+                    className="block text-center text-lg"
+                  >
+                    Open Case Detail
+                  </FieldLabel>
+                  <div className="flex">
+                    <Input
+                      id="input-button-group"
+                      placeholder="Enter case number, subject, or company..."
+                      className="rounded-r-none"
+                    />
+                    <Button className="rounded-l-none">
+                      <Search size={20} />
+                    </Button>
+                  </div>
+                </Field>
+              </div>
             </div>
             {/* Ticket Queue Table */}
-            <div className="col-span-5">
+            <div className="hidden sm:block col-span-2 sm:col-span-5">
               <Table>
                 <TableHeader>
                   <TableRow>
@@ -438,7 +429,27 @@ const ITSupervisorDashboardPage = async ({
                 </TableBody>
               </Table>
             </div>
-            <div className="col-span-5">
+            {/* Mobile Cards */}
+            <div className="sm:hidden col-span-2 sm:col-span-5">
+              {filteredTickets.map((ticket, key) => (
+                <div
+                  key={key}
+                  className="rounded-lg shadow-sm p-4 w-full flex flex-col items-center justify-center my-2"
+                >
+                  <span className="font-semibold">#{ticket.id}</span>
+                  <StatusBadge status={ticket.status} />
+
+                  <p className="text-sm text-center">{ticket.subject}</p>
+                  <div className="text-xs text-muted-foreground text-center">
+                    {ticket.company}
+                  </div>
+                  <div className="text-center">
+                    <ProgressBar value={ticket.progress} />
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="col-span-2 sm:col-span-5">
               <Pagination>
                 <PaginationContent>
                   <PaginationItem>

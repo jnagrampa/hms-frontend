@@ -7,8 +7,6 @@ import {
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
@@ -39,17 +37,10 @@ export default function UserDropdown({ name, role }: UserDropdownProps) {
 
       <DropdownMenuContent align="end" className="w-36">
         <DropdownMenuGroup>
-          {/* <DropdownMenuLabel>My Account</DropdownMenuLabel> */}
           <DropdownMenuItem>
             <LogOut /> Sign Out
           </DropdownMenuItem>
-          {/* <DropdownMenuItem>Billing</DropdownMenuItem>
-          <DropdownMenuItem>Settings</DropdownMenuItem> */}
         </DropdownMenuGroup>
-        {/* <DropdownMenuSeparator /> */}
-        {/* <DropdownMenuItem>GitHub</DropdownMenuItem>
-        <DropdownMenuItem>Support</DropdownMenuItem>
-        <DropdownMenuItem disabled>API</DropdownMenuItem> */}
       </DropdownMenuContent>
     </DropdownMenu>
   );
