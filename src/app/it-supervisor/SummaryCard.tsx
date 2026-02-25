@@ -1,6 +1,6 @@
 "use client";
 
-import { Card, CardContent, CardTitle } from "@/components/ui/card";
+import { useRouter, usePathname, useSearchParams } from "next/navigation";
 
 type TicketStatuses =
   | "Not Started"
@@ -17,16 +17,24 @@ interface SummaryCardProps {
 }
 
 const SummaryCard = ({ count, text }: SummaryCardProps) => {
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  const handleClick = () => {
+    const params = new URLSearchParams(searchParams.toString());
+
+    // normalize value
+    const statusValue = text.toLowerCase();
+    params.set("status", statusValue);
+    router.push(`${pathname}?${params.toString()}`);
+  };
+
   return (
-    // <Card className="w-full cursor-pointer transition-all duration-200 hover:-translate-y-1 hover:shadow-lg hover:border-primary/40">
-    //   <CardContent className="text-center text-xs sm:text-4xl m-0">
-    //     {count}
-    //   </CardContent>
-    //   <CardTitle className="text-center text-xs sm:text-lg m-0">
-    //     {text === "In-progress" ? "Open" : text}
-    //   </CardTitle>
-    // </Card>
-    <div className="w-full cursor-pointer transition-all duration-200 hover:-translate-y-1 shadow-sm hover:shadow-lg hover:border-primary/40 flex flex-col items-center justify-items-center p-4 rounded-lg">
+    <div
+      onClick={handleClick}
+      className="w-full cursor-pointer transition-all duration-200 hover:-translate-y-1 shadow-sm hover:shadow-lg hover:border-primary/40 flex flex-col items-center justify-items-center p-4 rounded-lg"
+    >
       <span className="text-sm sm:text-lg md:text-xl text-center">{count}</span>
       <span className="text-xs sm:text-base md:text-lg font-bold text-center">
         {text === "In-progress" ? "Open" : text}

@@ -1,6 +1,9 @@
+"use client";
+
+import { useEffect, useMemo, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { Home, FileText, Settings, LogOut, Search } from "lucide-react";
-import { Card, CardContent, CardTitle } from "@/components/ui/card";
+import { Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import UserDropdown from "./UserDropdown";
 import {
@@ -12,7 +15,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Field, FieldLabel } from "@/components/ui/field";
-import { ButtonGroup } from "@/components/ui/button-group";
 import { Input } from "@/components/ui/input";
 import {
   Pagination,
@@ -28,19 +30,24 @@ import ProgressBar from "./ProgressBar";
 import LeftNavbar from "./LeftNavbar";
 import SummaryCard from "./SummaryCard";
 
-const ITSupervisorDashboardPage = async ({
-  searchParams,
-}: {
-  searchParams: { status?: string };
-}) => {
-  const activeStatus = searchParams?.status ?? "";
-
+const ITSupervisorDashboardPage = () => {
   const user = {
     name: "John Doe",
     role: "IT Supervisor",
   };
 
-  const tickets = [
+  interface TicketObject {
+    id: string;
+    date: string;
+    subject: string;
+    progress: number;
+    minutes: number;
+    status: string;
+    company: string;
+    assignedTo: string;
+  }
+
+  const tickets: TicketObject[] = [
     {
       id: "13383",
       date: "Feb 16, 2026",
@@ -343,13 +350,21 @@ const ITSupervisorDashboardPage = async ({
     },
   ];
 
-  const filteredTickets =
-    activeStatus === ""
-      ? tickets
-      : tickets.filter(
-          (ticket) =>
-            ticket.status.toLowerCase() === activeStatus.toLowerCase(),
-        );
+  const searchParams = useSearchParams();
+  const [filtered, setFiltered] = useState<TicketObject[]>(tickets);
+
+  useEffect(() => {
+    const status = searchParams.get("status");
+    if (status) {
+      setFiltered(
+        tickets.filter(
+          (item) => item.status.toLowerCase() === status.toLowerCase(),
+        ),
+      );
+    } else {
+      setFiltered(tickets);
+    }
+  }, [searchParams]);
 
   return (
     <div className="min-h-screen w-full bg-gray-50 grid grid-rows-[auto_1fr]">
@@ -410,7 +425,7 @@ const ITSupervisorDashboardPage = async ({
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {filteredTickets.map((ticket, key) => (
+                  {filtered.map((ticket, key) => (
                     <TableRow key={key}>
                       <TableCell>{ticket.id}</TableCell>
                       <TableCell>{ticket.date}</TableCell>
@@ -431,7 +446,7 @@ const ITSupervisorDashboardPage = async ({
             </div>
             {/* Mobile Cards */}
             <div className="lg:hidden col-span-2 sm:col-span-3 md:grid md:grid-cols-2 md:gap-2 w-full">
-              {filteredTickets.map((ticket, key) => (
+              {filtered.map((ticket, key) => (
                 <div
                   key={key}
                   className="rounded-lg shadow-sm p-4 w-full flex flex-col items-center justify-center my-2"
