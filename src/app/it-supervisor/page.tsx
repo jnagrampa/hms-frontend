@@ -1,7 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -19,9 +18,7 @@ import { Input } from "@/components/ui/input";
 import {
   Pagination,
   PaginationContent,
-  PaginationEllipsis,
   PaginationItem,
-  PaginationLink,
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
@@ -29,342 +26,129 @@ import { StatusBadge } from "./StatusBadge";
 import ProgressBar from "./ProgressBar";
 import LeftNavbar from "./LeftNavbar";
 import SummaryCard from "./SummaryCard";
+import capitalizeWords from "./_utils/capitalizeWords";
+import getRandomISODate from "./_utils/getRandomISODate";
+import getRandomString from "./_utils/getRandomString";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import countTicketByStatus from "./_utils/countTicketByStatus";
+import { useFilterTicketStore } from "@/lib/FilterTicketStore";
 
 const ITSupervisorDashboardPage = () => {
   const user = {
     name: "John Doe",
     role: "IT Supervisor",
   };
+  const { filterTicketByStatus } = useFilterTicketStore();
+  const [itemsPerPage, setItemsPerPage] = useState(5);
+  const [tickets, setTickets] = useState<any[]>([]);
+  const [filtered, setFiltered] = useState<any[]>([]);
+  const [caseDetailText, setCaseDetailText] = useState("All");
+  const [currentPage, setCurrentPage] = useState(1);
+  const totalPages = Math.ceil(
+    (filterTicketByStatus
+      ? tickets.filter(
+          (item) =>
+            item.status?.toLowerCase() === filterTicketByStatus.toLowerCase(),
+        ).length
+      : tickets.length) / itemsPerPage,
+  );
+  const [notStartedTicketCount, setNotStartedTicketCount] = useState(0);
+  const [openTicketCount, setOpenTicketCount] = useState(0);
+  const [holdTicketCount, setHoldTicketCount] = useState(0);
+  const [closedTicketCount, setClosedTicketCount] = useState(0);
+  const [escalationTicketCount, setEscalationTicketCount] = useState(0);
 
-  interface TicketObject {
-    id: string;
-    date: string;
-    subject: string;
-    progress: number;
-    minutes: number;
-    status: string;
-    company: string;
-    assignedTo: string;
-  }
-
-  const tickets: TicketObject[] = [
-    {
-      id: "13383",
-      date: "Feb 16, 2026",
-      subject: "No email access for employee Jose Rizal",
-      progress: 0,
-      minutes: 120,
-      status: "Not Started",
-      company: "Unilogix Inc.",
-      assignedTo: "Kevin Filio",
-    },
-    {
-      id: "13383",
-      date: "Feb 16, 2026",
-      subject: "No email access for employee Jose Rizal",
-      progress: 0,
-      minutes: 120,
-      status: "Not Started",
-      company: "Unilogix Inc.",
-      assignedTo: "Kevin Filio",
-    },
-    {
-      id: "13383",
-      date: "Feb 16, 2026",
-      subject: "No email access for employee Jose Rizal",
-      progress: 0,
-      minutes: 120,
-      status: "Not Started",
-      company: "Unilogix Inc.",
-      assignedTo: "Kevin Filio",
-    },
-    {
-      id: "13383",
-      date: "Feb 16, 2026",
-      subject: "No email access for employee Jose Rizal",
-      progress: 0,
-      minutes: 120,
-      status: "Not Started",
-      company: "Unilogix Inc.",
-      assignedTo: "Kevin Filio",
-    },
-    {
-      id: "13383",
-      date: "Feb 16, 2026",
-      subject: "No email access for employee Jose Rizal",
-      progress: 0,
-      minutes: 120,
-      status: "Not Started",
-      company: "Unilogix Inc.",
-      assignedTo: "Kevin Filio",
-    },
-    {
-      id: "13383",
-      date: "Feb 16, 2026",
-      subject: "No email access for employee Jose Rizal",
-      progress: 0,
-      minutes: 120,
-      status: "Not Started",
-      company: "Unilogix Inc.",
-      assignedTo: "Kevin Filio",
-    },
-    {
-      id: "13383",
-      date: "Feb 16, 2026",
-      subject: "No Internet Centria",
-      progress: 35,
-      minutes: 120,
-      status: "In-progress",
-      company: "Unilogix Inc.",
-      assignedTo: "Kevin Filio",
-    },
-    {
-      id: "13383",
-      date: "Feb 16, 2026",
-      subject: "No Internet Centria",
-      progress: 35,
-      minutes: 120,
-      status: "In-progress",
-      company: "Unilogix Inc.",
-      assignedTo: "Kevin Filio",
-    },
-    {
-      id: "13383",
-      date: "Feb 16, 2026",
-      subject: "No Internet Centria",
-      progress: 35,
-      minutes: 120,
-      status: "In-progress",
-      company: "Unilogix Inc.",
-      assignedTo: "Kevin Filio",
-    },
-    {
-      id: "13383",
-      date: "Feb 16, 2026",
-      subject: "No Internet Centria",
-      progress: 35,
-      minutes: 120,
-      status: "In-progress",
-      company: "Unilogix Inc.",
-      assignedTo: "Kevin Filio",
-    },
-    {
-      id: "13383",
-      date: "Feb 16, 2026",
-      subject: "No Internet Centria",
-      progress: 35,
-      minutes: 120,
-      status: "In-progress",
-      company: "Unilogix Inc.",
-      assignedTo: "Kevin Filio",
-    },
-    {
-      id: "13383",
-      date: "Feb 16, 2026",
-      subject: "No Internet Centria",
-      progress: 35,
-      minutes: 120,
-      status: "In-progress",
-      company: "Unilogix Inc.",
-      assignedTo: "Kevin Filio",
-    },
-    {
-      id: "13383",
-      date: "Feb 16, 2026",
-      subject: "Pinkberry CCTV Not Working",
-      progress: 75,
-      minutes: 120,
-      status: "Hold",
-      company: "Unilogix Inc.",
-      assignedTo: "Kevin Filio",
-    },
-    {
-      id: "13383",
-      date: "Feb 16, 2026",
-      subject: "Pinkberry CCTV Not Working",
-      progress: 75,
-      minutes: 120,
-      status: "Hold",
-      company: "Unilogix Inc.",
-      assignedTo: "Kevin Filio",
-    },
-    {
-      id: "13383",
-      date: "Feb 16, 2026",
-      subject: "Pinkberry CCTV Not Working",
-      progress: 75,
-      minutes: 120,
-      status: "Hold",
-      company: "Unilogix Inc.",
-      assignedTo: "Kevin Filio",
-    },
-    {
-      id: "13383",
-      date: "Feb 16, 2026",
-      subject: "Pinkberry CCTV Not Working",
-      progress: 75,
-      minutes: 120,
-      status: "Hold",
-      company: "Unilogix Inc.",
-      assignedTo: "Kevin Filio",
-    },
-    {
-      id: "13383",
-      date: "Feb 16, 2026",
-      subject: "Pinkberry CCTV Not Working",
-      progress: 75,
-      minutes: 120,
-      status: "Hold",
-      company: "Unilogix Inc.",
-      assignedTo: "Kevin Filio",
-    },
-    {
-      id: "13383",
-      date: "Feb 16, 2026",
-      subject: "Pinkberry CCTV Not Working",
-      progress: 75,
-      minutes: 120,
-      status: "Hold",
-      company: "Unilogix Inc.",
-      assignedTo: "Kevin Filio",
-    },
-    {
-      id: "13383",
-      date: "Feb 16, 2026",
-      subject: "GreenBelt POS System Down",
-      progress: 120,
-      minutes: 120,
-      status: "Closed",
-      company: "Unilogix Inc.",
-      assignedTo: "Kevin Filio",
-    },
-    {
-      id: "13383",
-      date: "Feb 16, 2026",
-      subject: "GreenBelt POS System Down",
-      progress: 120,
-      minutes: 120,
-      status: "Closed",
-      company: "Unilogix Inc.",
-      assignedTo: "Kevin Filio",
-    },
-    {
-      id: "13383",
-      date: "Feb 16, 2026",
-      subject: "GreenBelt POS System Down",
-      progress: 120,
-      minutes: 120,
-      status: "Closed",
-      company: "Unilogix Inc.",
-      assignedTo: "Kevin Filio",
-    },
-    {
-      id: "13383",
-      date: "Feb 16, 2026",
-      subject: "GreenBelt POS System Down",
-      progress: 120,
-      minutes: 120,
-      status: "Closed",
-      company: "Unilogix Inc.",
-      assignedTo: "Kevin Filio",
-    },
-    {
-      id: "13383",
-      date: "Feb 16, 2026",
-      subject: "GreenBelt POS System Down",
-      progress: 120,
-      minutes: 120,
-      status: "Closed",
-      company: "Unilogix Inc.",
-      assignedTo: "Kevin Filio",
-    },
-    {
-      id: "13383",
-      date: "Feb 16, 2026",
-      subject: "GreenBelt POS System Down",
-      progress: 120,
-      minutes: 120,
-      status: "Closed",
-      company: "Unilogix Inc.",
-      assignedTo: "Kevin Filio",
-    },
-    {
-      id: "13383",
-      date: "Feb 16, 2026",
-      subject: "Slow Internet in Omnivores Inc.",
-      progress: 120,
-      minutes: 120,
-      status: "Escalation",
-      company: "Unilogix Inc.",
-      assignedTo: "Kevin Filio",
-    },
-    {
-      id: "13383",
-      date: "Feb 16, 2026",
-      subject: "Slow Internet in Omnivores Inc.",
-      progress: 120,
-      minutes: 120,
-      status: "Escalation",
-      company: "Unilogix Inc.",
-      assignedTo: "Kevin Filio",
-    },
-    {
-      id: "13383",
-      date: "Feb 16, 2026",
-      subject: "Slow Internet in Omnivores Inc.",
-      progress: 120,
-      minutes: 120,
-      status: "Escalation",
-      company: "Unilogix Inc.",
-      assignedTo: "Kevin Filio",
-    },
-    {
-      id: "13383",
-      date: "Feb 16, 2026",
-      subject: "Slow Internet in Omnivores Inc.",
-      progress: 120,
-      minutes: 120,
-      status: "Escalation",
-      company: "Unilogix Inc.",
-      assignedTo: "Kevin Filio",
-    },
-    {
-      id: "13383",
-      date: "Feb 16, 2026",
-      subject: "Slow Internet in Omnivores Inc.",
-      progress: 120,
-      minutes: 120,
-      status: "Escalation",
-      company: "Unilogix Inc.",
-      assignedTo: "Kevin Filio",
-    },
-    {
-      id: "13383",
-      date: "Feb 16, 2026",
-      subject: "Slow Internet in Omnivores Inc.",
-      progress: 120,
-      minutes: 120,
-      status: "Escalation",
-      company: "Unilogix Inc.",
-      assignedTo: "Kevin Filio",
-    },
-  ];
-
-  const searchParams = useSearchParams();
-  const [filtered, setFiltered] = useState<TicketObject[]>(tickets);
-
+  // 1. Seed random tickets on component load
   useEffect(() => {
-    const status = searchParams.get("status");
+    const generated = Array.from({ length: 100 }, (_, i) => ({
+      id: (i + 1).toString(),
+      date: getRandomISODate("2026-01-01T00:00:00Z", "2026-02-25T23:59:59Z"), // Between Jan 1, 2026 and Feb 25, 2026
+      subject: getRandomString([
+        "VPN Connection Timeout - Error Code 807",
+        "Outlook Failing to Sync with Exchange Server",
+        "Laptop Battery Not Charging / Rapid Drainage",
+        "Request for Access: Production Database (SQL Admin)",
+        "Blue Screen of Death (BSOD) on Boot-up",
+        "Printer Offline: Floor 3 North Wing (PRN-042)",
+        "MFA Reset Request for User: [Employee Name]",
+        "Excel Freezing when Opening Large .CSV Files",
+        "Monitor Display Flickering / Signal Loss",
+        "WiFi Signal Weak in Conference Room 'Bravo'",
+      ]),
+      progress: Math.floor(Math.random() * 301), // between 0 - 300%
+      minutes: Math.floor(Math.random() * 1001), // between 0 - 1000 minutes
+      status: getRandomString([
+        "Not Started",
+        "In-progress",
+        "Hold",
+        "Purchasing",
+        "Escalation",
+        "Invalid",
+        "Closed",
+      ]),
+      company: getRandomString([
+        "Nebula Dynamics",
+        "Ironwood Solutions",
+        "Stellar Logistics",
+        "Apex Systems Group",
+        "Veridian Tech",
+        "Blue Horizon Ventures",
+        "Summit Analytics",
+        "Nova Stream Partners",
+        "Quantum Reach",
+        "Beacon Industries",
+      ]),
+      assignedTo: getRandomString([
+        "Saige Fuentes",
+        "Bowen Higgins",
+        "Leighton Kramer",
+        "Kylan Gentry",
+        "Amelie Griffith",
+        "Franklin Sierra",
+        "Marceline Avila",
+        "Jaylen Blackwell",
+        "Saoirse Conrad",
+        "Dilan Wolf",
+      ]),
+    }));
+    setTickets(generated);
+    setFiltered(generated);
+    setNotStartedTicketCount(countTicketByStatus(generated, "Not Started"));
+    setOpenTicketCount(countTicketByStatus(generated, "In-progress"));
+    setHoldTicketCount(countTicketByStatus(generated, "Hold"));
+    setEscalationTicketCount(countTicketByStatus(generated, "Escalation"));
+    setClosedTicketCount(countTicketByStatus(generated, "Closed"));
+  }, []);
+
+  // 2. Filter tickets based on selected status, the master list of tickets, items per page, and current page
+  useEffect(() => {
+    const status = filterTicketByStatus;
+    let baseData = tickets;
     if (status) {
-      setFiltered(
-        tickets.filter(
-          (item) => item.status.toLowerCase() === status.toLowerCase(),
-        ),
+      baseData = tickets.filter(
+        (item) => item.status?.toLowerCase() === status.toLowerCase(),
       );
+      setCaseDetailText(capitalizeWords(status));
     } else {
-      setFiltered(tickets);
+      setCaseDetailText("All");
     }
-  }, [searchParams]);
+    const totalPages = Math.ceil(baseData.length / itemsPerPage);
+    // Prevent invalid page after filtering
+    if (currentPage > totalPages) {
+      setCurrentPage(1);
+      return;
+    }
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    setFiltered(baseData.slice(startIndex, endIndex));
+  }, [filterTicketByStatus, tickets, itemsPerPage, currentPage]);
 
   return (
     <div className="min-h-screen w-full bg-gray-50 grid grid-rows-[auto_1fr]">
@@ -380,11 +164,17 @@ const ITSupervisorDashboardPage = () => {
         <main className="w-full p-6">
           <div className="w-full grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2">
             {/* Summary Statistics Section */}
-            <SummaryCard count={1} text="Not Started" />
-            <SummaryCard count={12} text="In-progress" />
-            <SummaryCard count={19} text="Hold" />
-            <SummaryCard count={2} text="Closed" />
-            <SummaryCard count={34} text="Escalation" />
+            <SummaryCard
+              count={notStartedTicketCount}
+              statusType="Not Started"
+            />
+            <SummaryCard count={openTicketCount} statusType="In-progress" />
+            <SummaryCard count={holdTicketCount} statusType="Hold" />
+            <SummaryCard count={closedTicketCount} statusType="Closed" />
+            <SummaryCard
+              count={escalationTicketCount}
+              statusType="Escalation"
+            />
             <div className="sm:hidden"></div>
             {/* Search Bar Section */}
             <div className="my-4 col-span-2 sm:col-span-3 lg:col-span-5 flex justify-center">
@@ -394,7 +184,7 @@ const ITSupervisorDashboardPage = () => {
                     htmlFor="input-button-group"
                     className="block text-center text-lg"
                   >
-                    Open Case Detail
+                    {caseDetailText} Case Details
                   </FieldLabel>
                   <div className="flex">
                     <Input
@@ -465,30 +255,82 @@ const ITSupervisorDashboardPage = () => {
               ))}
             </div>
             <div className="col-span-2 sm:col-span-3 lg:col-span-5">
-              <Pagination>
-                <PaginationContent>
-                  <PaginationItem>
-                    <PaginationPrevious href="#" />
-                  </PaginationItem>
-                  <PaginationItem>
-                    <PaginationLink href="#">1</PaginationLink>
-                  </PaginationItem>
-                  <PaginationItem>
-                    <PaginationLink href="#" isActive>
-                      2
-                    </PaginationLink>
-                  </PaginationItem>
-                  <PaginationItem>
-                    <PaginationLink href="#">3</PaginationLink>
-                  </PaginationItem>
-                  <PaginationItem>
-                    <PaginationEllipsis />
-                  </PaginationItem>
-                  <PaginationItem>
-                    <PaginationNext href="#" />
-                  </PaginationItem>
-                </PaginationContent>
-              </Pagination>
+              <div className="flex items-center justify-between gap-4">
+                <Field orientation="horizontal" className="w-fit">
+                  <FieldLabel htmlFor="select-rows-per-page">
+                    Rows per page
+                  </FieldLabel>
+                  <Select
+                    value={
+                      itemsPerPage === tickets.length
+                        ? "ALL"
+                        : String(itemsPerPage)
+                    }
+                    onValueChange={(value) => {
+                      if (value === "ALL") {
+                        setCurrentPage(1);
+                        if (value === "ALL") {
+                          setItemsPerPage(tickets.length);
+                        } else {
+                          setItemsPerPage(Number(value));
+                        }
+                      } else {
+                        setItemsPerPage(Number(value));
+                      }
+                    }}
+                  >
+                    <SelectTrigger className="w-20" id="select-rows-per-page">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent align="start">
+                      <SelectGroup>
+                        <SelectItem value="5">5</SelectItem>
+                        <SelectItem value="10">10</SelectItem>
+                        <SelectItem value="25">25</SelectItem>
+                        <SelectItem value="50">50</SelectItem>
+                        <SelectItem value="ALL">ALL</SelectItem>
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                </Field>
+                <Pagination className="mx-0 w-auto">
+                  <PaginationContent>
+                    <PaginationItem>
+                      <PaginationPrevious
+                        onClick={() =>
+                          setCurrentPage((prev) => Math.max(prev - 1, 1))
+                        }
+                        className={
+                          currentPage === 1
+                            ? "pointer-events-none opacity-50"
+                            : ""
+                        }
+                      />
+                    </PaginationItem>
+
+                    <PaginationItem className="hidden md:block">
+                      <span className="px-4 text-sm">
+                        Page {currentPage} of {totalPages || 1}
+                      </span>
+                    </PaginationItem>
+
+                    <PaginationItem>
+                      <PaginationNext
+                        onClick={() =>
+                          setCurrentPage((prev) =>
+                            Math.min(prev + 1, totalPages),
+                          )
+                        }
+                        className={
+                          currentPage === totalPages
+                            ? "pointer-events-none opacity-50"
+                            : ""
+                        }
+                      />
+                    </PaginationItem>
+                  </PaginationContent>
+                </Pagination>
+              </div>
             </div>
           </div>
         </main>

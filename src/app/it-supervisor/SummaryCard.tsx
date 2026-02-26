@@ -1,33 +1,17 @@
 "use client";
 
-import { useRouter, usePathname, useSearchParams } from "next/navigation";
-
-type TicketStatuses =
-  | "Not Started"
-  | "In-progress"
-  | "Hold"
-  | "Purchasing"
-  | "Escalation"
-  | "Invalid"
-  | "Closed";
+import { useFilterTicketStore } from "@/lib/FilterTicketStore";
 
 interface SummaryCardProps {
   count: number;
-  text: TicketStatuses;
+  statusType: string;
 }
 
-const SummaryCard = ({ count, text }: SummaryCardProps) => {
-  const router = useRouter();
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
+const SummaryCard = ({ count, statusType }: SummaryCardProps) => {
+  const setStatus = useFilterTicketStore((state) => state.setStatus);
 
   const handleClick = () => {
-    const params = new URLSearchParams(searchParams.toString());
-
-    // normalize value
-    const statusValue = text.toLowerCase();
-    params.set("status", statusValue);
-    router.push(`${pathname}?${params.toString()}`);
+    setStatus(statusType.toLowerCase());
   };
 
   return (
@@ -36,8 +20,10 @@ const SummaryCard = ({ count, text }: SummaryCardProps) => {
       className="w-full cursor-pointer transition-all duration-200 hover:-translate-y-1 shadow-sm hover:shadow-lg hover:border-primary/40 flex flex-col items-center justify-items-center p-4 rounded-lg"
     >
       <span className="text-sm sm:text-lg md:text-xl text-center">{count}</span>
+
       <span className="text-xs sm:text-base md:text-lg font-bold text-center">
-        {text === "In-progress" ? "Open" : text}
+        {/* Business Logic: Internally 'In-progress' tickets are displayed as 'Open' tickets */}
+        {statusType === "In-progress" ? "Open" : statusType}
       </span>
     </div>
   );

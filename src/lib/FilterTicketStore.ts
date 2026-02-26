@@ -1,12 +1,12 @@
 import { create } from "zustand";
 
-interface CounterState {
+interface FilterTicketState {
   filterTicketByStatus: string;
   setStatus: (status: string) => void;
   resetStatus: () => void;
 }
 
-export const useCounterStore = create<CounterState>((set) => ({
+export const useFilterTicketStore = create<FilterTicketState>((set) => ({
   filterTicketByStatus: "",
   setStatus: (status: string) =>
     set(() => ({
